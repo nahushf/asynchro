@@ -1,0 +1,9 @@
+export const LOADING = 'LOADING';
+export const SUCCESS_STATE = { isLoading: false, hasError: false };
+export const LOADING_STATE = { isLoading: true, hasError: false };
+export const ERROR_STATE = { isLoading: false, hasError: true };
+export const SET_LOADING = 'SET_LOADING';
+export const SET_ERROR = 'SET_ERROR';
+export const SET_SUCCESS = 'SET_SUCCESS';
+export const RELOAD = 'RELOAD';
+export const UNSET_RELOAD = 'UNSET_RELOAD';

@@ -1,10 +1,11 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './examples/example.tsx',
     output: {
         filename: 'asynchro.js',
-        path: path.resolve(--dirname, 'dist')
+        path: path.resolve(__dirname, 'dist')
     },
     module: {
         rules: [
@@ -17,5 +18,16 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
-    }
+    },
+    devServer: {
+        contentBase: 'dist',
+        hot: true,
+        inline: true
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './examples/index.ejs',
+            filename: 'index.html'
+        })
+    ]
 };
