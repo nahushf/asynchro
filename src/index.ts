@@ -12,11 +12,11 @@ export interface IAsyncProps {
      */
     identifier: string;
     /** The JSX to be displayed if the promise resolves successfully. */
-    content: JSX.Element;
+    content: JSX.Element | ((resp) => JSX.Element);
     /** The JSX to be displayed when the promise is in the pending state. */
-    loader?: JSX.Element;
+    loader?: JSX.Element | (() => JSX.Element);
     /** The JSX to be displayed if the promise fails. */
-    error?: JSX.Element;
+    error?: JSX.Element | ((error) => JSX.Element);
     /** The initialState to be set in the store. */
     initialState?: IAsyncState;
     dispatch?: (...args: any[]) => void;
@@ -41,9 +41,9 @@ export interface IAsyncState {
 
 export class AsyncImpl extends React.PureComponent<IAsyncProps & IAsyncMSP & IAsyncMDP, {}> {
 
-    Loader: JSX.Element;
-    Error: JSX.Element;
-    Content: JSX.Element;
+    Loader: IAsyncProps['loader'];
+    Error: IAsyncProps['error'];
+    Content: IAsyncProps['content'];
     resp: Object;
 
     /** Initializes the Loader, Error and Content JSX. */
@@ -154,11 +154,91 @@ export function mapDispatchToProps(dispatch) {
     return {
         unsetReload(identifier: string) {
             dispatch(unsetReload​​(identifier))
-        }
+        },
+        dispatch
     }
 }
 
 export let Async = connect<IAsyncMSP, IAsyncMDP, IAsyncProps>(
     mapStateToProps, mapDispatchToProps, null, { withRef: true }
 )(AsyncImpl);
+
+// import { INVALID_IMPLEMENTATION_ASYNC, MISSING_STORE } from './constants';
+// import { IAsyncState } from './interfaces';
+// import {setLoading, setError, setSuccess} from './redux/storeUtils/asyncActions';
+// import {connect} from 'react-redux';
+// import * as React from 'react';
+
+// let self;
+
+// export class Asynchro<T> {
+//     self: any
+//     constructor(public store) {
+//         if (!store) {
+//             throw new Error(MISSING_STORE);
+//         }
+//         this.self = this;
+//     }
+
+//     Component = connect(
+//         (state) => {}
+//     )(class <P extends IAsyncState, S> extends React.Component<P, S> {
+//         isPromiseString: boolean;
+//         static identifier: string;
+//         constructor(props) {
+//             super(props);
+//         }
+
+//         promise: () => Promise<any> | {url: string, headers: any, params: any, method: string}; 
+
+//         static setLoading() {
+//             self.store.dispatch(setLoading(this.identifier));                          
+//         }
+
+//         static setError() {
+//             self.store.dispatch(setError(this.identifier));
+//         }
+
+//         static setSuccess() {
+//             self.store.dispatch(setSuccess(this.identifier));
+//         }
+
+//         componentWillMount() {
+//             const {promise} = this;
+//             if (promise instanceof Function) {
+//                 promise
+//             }
+//         }
+
+//         renderError = () => {
+//             return <span className="async-error-placeholder"/>;
+//         }
+
+//         renderLoading = () => {
+//             return <span className="async-loading-placeholder"/>;
+//         }
+
+//         renderSuccess = () => {
+//             return <span className="async-success-placeholder"/>;
+//         }
+
+//         render() {
+//             const {renderError, renderLoading, renderSuccess, props: {isLoading, hasError}} = this;
+
+//             if (!renderError || !renderLoading || !renderSuccess) {
+//                 throw new Error(INVALID_IMPLEMENTATION_ASYNC);
+//             }
+
+//             if (this.props.isLoading) {
+//                 return renderLoading();
+//             }
+
+//             if (this.props.hasError) {
+//                 return renderError();
+//             }
+
+//             return renderSuccess();
+//         }
+//     })
+// }
 

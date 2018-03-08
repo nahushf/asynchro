@@ -15,9 +15,9 @@ export function executePromiseAction(promise, identifier, dispatch) {
 
     dispatch(setLoading(identifier))
     promise.then(
-        () => setSuccess(identifier),
+        () => dispatch(setSuccess(identifier)),
         e => {
-            setError(identifier);
+            dispatch(setError(identifier));
             throw e;
         }
     )
